@@ -245,11 +245,12 @@ module Nestive
     # These instructions are reversed and replayed when we render the block (rather than as they
     # happen) due to the way they are gathered by the layout extension process (in reverse).
     def render_area(name)
-      [].tap do |output|
-        @_area_for.fetch(name, []).reverse_each do |method_name, content|
-          output.public_send method_name, content
-        end
-      end.join.html_safe
+      output = []
+      @_area_for.fetch(name, []).reverse_each do |method_name, content|
+        output.public_send method_name, content
+      end
+      @_area_for.delete name
+      output.join.html_safe
     end
 
   end
